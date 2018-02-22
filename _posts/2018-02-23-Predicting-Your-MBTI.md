@@ -10,6 +10,14 @@ date: 2018-02-23
 
 MBTI, short for Myers-Briggs Type Indicator, is a personality metric developed by Katharine Cook Briggs and her daughter Isabel Briggs Myers, based on Carl Jung's theory on psychological types. Today, it is a common tool used by individuals and organizations alike, be it to better understand themselves or to optimize workplace dynamics.
 
+Each person is tested in 4 different areas:
+* Extraversion/Introversion
+* Sensing/Intuition
+* Thinking/Feeling
+* Judging/Perceiving
+
+Each person would be typed with 4 letters according to MBTI. So for example for someone whose type is ENFJ, this means that this person is extraverted, intuitive, feeling and judging. I hope this little write-up is succinct enough, but if it is not then please feel free to refer to the official [MBTI page](http://www.myersbriggs.org/my-mbti-personality-type/mbti-basics/home.htm?bhcp=1) to find out more. 
+
 The most common way of finding out of our type is to visit free personality test websites, where they would require you to answer questions after questions after questions (or statements) in order to determine your type, as accurately as possible. More often than not, these questions relate directly to the type characteristic which requires you to rate how well you 'relate' to the question asked. For example:
 
 > 25. My idea of relaxation involves reading a book by the beach
@@ -24,7 +32,7 @@ If you haven't noticed yet, this presents a series of problems, in no order of m
 
 1. We'd inherently know that this question refers to Extroversion/Introversion, and hence may tend to answer based on how we identify rather than purely relating to the question asked.
     * In other words, we'd answer with some form of a bias i.e. Who we think we are or want to be vs who we really are.
-    * Come to think of it, regarding the spelling of extrovert or extravert (oh good lord spellcheck got activated for the latter!), I found this.
+    * Come to think of it, regarding the spelling of extrovert or extravert (oh good lord spellcheck got activated for the latter!), I found [this](https://blogs.scientificamerican.com/beautiful-minds/the-difference-between-extraversion-and-extroversion/).
 2. I identify as a strong introvert but I don't really dig reading a book by the beach, nor do people from landlocked areas etc...
 3. We cannot, in some senses, identify by how much we agree/disagree with the statement/question. However, in order for the model to work, we have to choose a side. Strongly.
 4. Answering so many questions is already by itself a big time waster, not to mention it being a tiring process.
@@ -35,7 +43,7 @@ The question wasn't picked up from any site in particular by the way, I made it 
 
 My project shall attempt to aid users in having a seamless experience in finding out their MBTI type. Instead of having the user dedicate his/her precious time and brain energy to processing all the questions, the machine only needs to pick up the existing messages produced by the user to predict their MBTI type!
 
-Read on if you would like to understand the how, but beware, it can get a little technical. Otherwise, click here to go straight to the webapp for some fun!
+Read on if you would like to understand the how, but beware, it can get a little technical. Otherwise, click [here](https://yix90.github.io) to go straight to the webapp for some fun!
 
 ### How
 The model makes use of forum posts from personalitycafe.com for training. Luckily for me, this dataset is already made available on Kaggle in the form of 50 posts per person of a certain MBTI type. Not a competition piece though, just a dataset for us to play around with.
@@ -103,3 +111,338 @@ If, at this point, you are already feeling afraid of what is to come, here is pr
 If you haven't noticed already, I used some 'big' words to describe the process. If you would like to learn what they mean and what they do, read on below!
 
 ## The ~~boring~~ important stuff.
+Congratulations for making to this point. From here on, I shall go into a little more detail, the steps taken towards greatness.
+
+### Data observation and cleaning
+
+As mentioned, the dataset comes with just two columns: The MBTI type itself and 50 posts made by the person of the said MBTI type. 
+
+We have:
+* No null values
+* Shape = (8675, 2)
+* Nothing else significant to note (for now)
+
+### Target variable
+
+As with any Machine Learning tasks, we must first define our target variable. There are a total of 16 different combinations of MBTI types, which means we would have a 16-class classification problem to solve
+
+...or do we?
+
+Here is a breakdown on the number of people per MBTI type (in yellow), benchmarked against the global population percentage representation of each type mapped onto the graph (taken from [careerplanner.com](https://www.careerplanner.com/MB2/TypeInPopulation.cfm)):
+
+![mbti_comparison](mbti_comparison.png)
+
+And here is the breakdown of the total number of people of each type in the dataset:
+
+```
+INFP    1832
+INFJ    1470
+INTP    1304
+INTJ    1091
+ENTP     685
+ENFP     675
+ISTP     337
+ISFP     271
+ENTJ     231
+ISTJ     205
+ENFJ     190
+ISFJ     166
+ESTP      89
+ESFP      48
+ESFJ      42
+ESTJ      39
+```
+
+On first glance this would look like a very bleak start to the project since it is heavily imbalanced...good luck to me.
+
+**\*Ok actually I can fix this\***
+
+Instead of doing 16 imbalanced classification head-on, this dataset can be re-classified as 4 binary classifiers!
+
+```python
+mbtitypes_all['is_E'] = mbtitypes_all['type'].apply(lambda x: 1 if x[0] == 'E' else 0)
+mbtitypes_all['is_S'] = mbtitypes_all['type'].apply(lambda x: 1 if x[1] == 'S' else 0)
+mbtitypes_all['is_T'] = mbtitypes_all['type'].apply(lambda x: 1 if x[2] == 'T' else 0)
+mbtitypes_all['is_J'] = mbtitypes_all['type'].apply(lambda x: 1 if x[3] == 'J' else 0)
+mbtitypes_all.columns = ['type','is_E','is_S','is_T','is_J']
+mbtitypes_all.head()
+```
+type|is_E|is_S|is_T|is_J
+----|----|----|----|----
+INFJ|0|0|0|1
+ENTP|1|0|1|0
+INTP|0|0|1|0
+INTJ|0|0|1|1
+ENTJ|1|0|1|1
+
+Here we visualize the classifiers once again:
+
+![4_piechart](4_piechart.png)
+
+This looks a lot better than the previous 16-class variable, though we still see imbalanced targets for E/I and S/N. We shall deal with them in due time.
+
+**Assumption made:** Each letter type is independent of other types i.e. A person's introversion/extraversion is totally not related to their judgement/perception. Nevertheless, we can still test them:
+
+Correlation - How close each feature is affected by another. 
+
+For example, if the amount of sales drops/increases definitely with an increase in price, we can say that amount of sales and price are correlated. Whereas in the case where the number of shoppers does not increase/decrease significantly with the changes in pricing, we can say that they have little to no correlation.
+
+![4type_corr](4type_corr.png)
+
+The correlation for all 4 types are very close to 0, which is a good sign.
+
+### Features
+
+Time to extract our features!
+
+We first have a cursory look at the text data, which we will see that it is made up of more than mere text alone:
+
+##### Webpages
+
+* Video links: https://www.youtube.com/watch?v=QyPqT8umzmY
+* Image links: http://41.media.tumblr.com/tumblr_lfouy03PMA1qa1rooo1_500.jpg
+* Other links: http://phantomshine.blogspot.com/2012/05/writer-analysis-through-mbti.html (taken from another data point)
+I'll get to the other data (as mentioned in TLDR) later, I promise.
+
+Video, image and other links can potentially add to the dataset, other than their mere count. We can get video titles from video links, perform image content analysis for image links, or simply category identifying for other links. All these data can potentially be used for topic modelling to find out what kind of topics do people of a certain MBTI type care about collectively that the other type does not care as much about.
+
+Unfortunately I only went as far as extract the video title and nothing else. Sorry... :sob:
+
+##### Other Metadata
+
+Once again, you may notice other non-regular text like @mentions, #tags, \*emphasis or action words\*, :emoticons:, [bracket words], even dot usage (...) etc. For those features I extracted the total count for those features. On hindsight I could have gotten the mean instead, but it was already too late for that decision stage. I managed to 'fix' it later on.
+
+I also extracted the number of MBTI mentions (since the dataset was from a personality discussion forum) and Enneagram references. Sidetrack - The Enneagram is another form of personality typology which could potentially serve as my next project, but not now. Priorities. Meanwhile, you may also take the [test](https://www.eclecticenergies.com/enneagram/test) if you are interested :wink:
+
+Other data available includes word count, character count, number of fully capitalized words (that are not MBTI references) etc which are also incorporated as features.
+
+### Parts of Speech (POS) tagging
+
+Parts of Speech or POS tagging is used for identifying the type of words within a sentence. For my use case, the area of interest would be to find out once again if there is any discrimination between the frequency of the type of words used between each MBTI type. I did the POS tagging using the Natural Language ToolKit (NLTK) POS tagger.
+
+```python
+import nltk
+from nltk.tokenize import word_tokenize
+
+#Takes a long time to run!
+mbti['tagged_words'] = mbti['words_only'].apply(
+    lambda x: [nltk.pos_tag(word_tokenize(line.decode('utf-8', errors='replace'))) for line in x])
+mbti['tagged_words'][0]
+```
+Output of first 5 lines (First 2 lines contain only links which are promptly removed):
+
+```
+[[],
+ [],
+ [(u'enfp', 'NN'),
+  (u'and', 'CC'),
+  (u'intj', 'JJ'),
+  (u'moments', 'NNS'),
+  (u'sportscenter', 'MD'),
+  (u'not', 'RB'),
+  (u'top', 'VB'),
+  (u'ten', 'NN'),
+  (u'plays', 'NNS'),
+  (u'pranks', 'NNS')],
+ [(u'What', 'WP'),
+  (u'has', 'VBZ'),
+  (u'been', 'VBN'),
+  (u'the', 'DT'),
+  (u'most', 'RBS'),
+  (u'life-changing', 'JJ'),
+  (u'experience', 'NN'),
+  (u'in', 'IN'),
+  (u'your', 'PRP$'),
+  (u'life', 'NN'),
+  (u'?', '.')],
+ [(u'On', 'IN'),
+  (u'repeat', 'NN'),
+  (u'for', 'IN'),
+  (u'most', 'JJS'),
+  (u'of', 'IN'),
+  (u'today', 'NN'),
+  (u'.', '.')]
+
+```
+
+After a long arduous tagging process plus consolidating all the tags used by nltk on my text dataset, I managed to get the following tags:
+```
+['PRP$', 'VBG', 'VBD', '``', 'VBN', 'POS', "''", 'VBP', 'WDT', 'JJ', 'WP', 'VBZ', 'DT', '#', 'RP', '$', 'NN', ')', '(', 'FW', ',', '.', 'TO', 'PRP', 'RB', ':', 'NNS', 'NNP', 'VB', 'WRB', 'CC', 'LS', 'PDT', 'RBS', 'RBR', 'CD', 'EX', 'IN', 'WP$', 'MD', 'NNPS', 'JJS', 'JJR', 'SYM', 'UH']
+```
+
+##### Mean or Median
+
+We ideally want to use the median value of a statistic as the median value is more resilient towards outliers than the mean. However in our case, as with the tags by nltk plus the meta-features as mentioned above, they do not appear very often which often results in returning a median of 0, which is a difficult number for us to use. For a cursory overview of the stats:
+
+```python
+for col in columnname:
+    newlist=[]
+    for line in mbti['tagged_words'][0]:
+        newlist.append(len([x for x in line if x[1]==col]))
+    print "For "+col+","
+    print "Sum = ", np.sum(newlist)
+    print "Variance =", np.var(newlist)
+    print "Mean =",np.mean(newlist)
+    print "Median =",np.median(newlist)
+    print "Standard Deviation =",np.std(newlist)
+```
+
+```
+Out:
+For PRP$,
+Sum =  16
+Variance = 0.3776
+Mean = 0.32
+Median = 0.0
+Standard Deviation = 0.614491659829
+For VBG,
+Sum =  14
+Variance = 0.3616
+Mean = 0.28
+Median = 0.0
+Standard Deviation = 0.601331855135
+For VBD,
+Sum =  11
+Variance = 0.4516
+Mean = 0.22
+Median = 0.0
+Standard Deviation = 0.672011904656
+For ``,
+Sum =  0
+Variance = 0.0
+Mean = 0.0
+Median = 0.0
+Standard Deviation = 0.0
+For VBN,
+Sum =  18
+Variance = 0.5104
+Mean = 0.36
+Median = 0.0
+Standard Deviation = 0.71442284398
+```
+
+On hindsight I could have put this into a dataframe but at this stage...
+
+For each tag, I took the mean and standard deviation as my column features.
+
+I still want to use the median as a determinant. How can I do so? Combine the tags!
+
+For interests sake, here is the full list of tags used by nltk, minus the punctuation tags:
+
+```
+#For reference ;)
+```
+Tag|Description
+---|------------
+CC| Coordinating conjunction
+CD| Cardinal number
+DT| Determiner
+EX| Existential there
+FW| Foreign word
+IN| Preposition or subordinating conjunction
+JJ| Adjective
+JJR| Adjective, comparative
+JJS| Adjective, superlative
+LS| List item marker
+MD| Modal
+NN| Noun, singular or mass
+NNS| Noun, plural
+NNP| Proper noun, singular
+NNPS| Proper noun, plural
+PDT| Predeterminer
+POS| Possessive ending
+PRP| Personal pronoun
+PRP\$| Possessive pronoun
+RB| Adverb
+RBR| Adverb, comparative
+RBS| Adverb, superlative
+RP| Particle
+SYM| Symbol
+TO| to
+UH| Interjection
+VB| Verb, base form
+VBD| Verb, past tense
+VBG| Verb, gerund or present participle
+VBN| Verb, past participle
+VBP| Verb, non­3rd person singular present
+VBZ| Verb, 3rd person singular present
+WDT| Wh­determiner
+WP| Wh­pronoun
+WP\$| Possessive wh­pronoun
+WRB| Wh­adverb
+
+
+We can already notice that there are multiple tags for each word type, each having a different function. This discrimination may be important for word generation to teach the machine how to write sentences properly, but once again, this is not my use case.
+
+Now compare that with POS tags by Stanford NLP:
+
+Tag|Meaning|English Examples
+---|--------|-----------
+ADJ|adjective|	new, good, high, special, big, local
+ADP|adposition|	on, of, at, with, by, into, under
+ADV|adverb|	really, already, still, early, now
+CONJ|conjunction|	and, or, but, if, while, although
+DET|determiner, article|	the, a, some, most, every, no, which
+NOUN|noun|	year, home, costs, time, Africa
+NUM|numeral|	twenty-four, fourth, 1991, 14:24
+PRT|particle|	at, on, out, over per, that, up, with
+PRON|pronoun|	he, their, her, its, my, I, us
+VERB|verb|	is, say, told, given, playing, would
+.|	punctuation marks|	. , ; !
+X|	other|	ersatz, esprit, dunno, gr8, univeristy
+
+So much better!
+Group them together (based on my own understanding :laughing:)
+
+```python
+#Lets make a dictionary
+convtag_dict={'ADJ':['JJ','JJR','JJS'], 'ADP':['EX','TO'], 'ADV':['RB','RBR','RBS','WRB'], 'CONJ':['CC','IN'],'DET':['DT','PDT','WDT'],
+              'NOUN':['NN','NNS','NNP','NNPS'], 'NUM':['CD'],'PRT':['RP'],'PRON':['PRP','PRP$','WP','WP$'],
+              'VERB':['MD','VB','VBD','VBG','VBN','VBP','VBZ'],'.':['#','$',"''",'(',')',',','.',':'],'X':['FW','LS','UH']}
+```
+
+...And then get the median and standard deviation for each.
+
+Done.
+
+### Term Frequency - Inverse Document Frequency (TFIDF)
+
+This is the golden fine point where I start to deal with the dataset separately across the 4 MBTI types.
+
+**Rationale:** There is a methodology of how I am going to perform the TFIDF here.
+
+First of all, a one-liner summary about TFIDF: It is a measure for scoring words that appear often in a single document, but very rarely in other documents. Its use can be attributed to, once again for our use case, detecting the words that someone of an MBTI type would use more often collectively as opposed to another.
+
+For each run of the target variable (I'll start with Introversion/Extraversion), a train test split will be done using stratified sampling, especially important for E/I and S/N target variables. Since each row (or data point) identifies differently with each variable, the collection of rows belonging to X_train in E/I will definitely be different from the X_train of S/N. This is important because I will only use the X_train portion to train the TFIDF model, followed by having the model transform the X_test word data. This measure ensures that the word data in the test set has no role in the dataset training which also means avoiding overrepresentation or overfitting.
+
+And so this is where we start to part ways.
+
+For training purposes we can specify the removal of stop words (Common words such as "a, an, the" etc), a word range (otherwise known as ngram range) and the max number of words/phrases, among other features not as worth highlighting here. Last I ran with an ngram range of 1-3 and no specified max. features, I got around 300,000+ rows in return. It is a miracle my computer did not crash.
+
+To better manage the TFIDF word results while extracting good features at the same time, I would:
+1. Run the TFIDF model with ngram range of 1, and max. features of 10,000 words/phrases
+2. Reduce number of features to 500 using Truncated Singular Value Decomposition (Truncated SVD)
+3. Save both TFIDF and TSVD instances into a list for later use.
+
+For reference, below is the code that runs the mentioned process:
+```python
+for i in np.arange(1,4):
+    tfidf = TfidfVectorizer(stop_words='english',ngram_range=(i,i), decode_error='replace', max_features=10000)
+    Xword_train = tfidf.fit_transform(X_train['words_only'])
+    Xword_test = tfidf.transform(X_test['words_only'])
+
+    #We need to reduce the size of the tfidf trained matrix first
+    #But after running TruncatedSVD we cannot see the words specifically alr so too bad...
+    tsvd = TruncatedSVD(n_components=500, algorithm='arpack', random_state=self.random_state)
+    Xwordie_train = tsvd.fit_transform(Xword_train)
+    Xwordie_test = tsvd.transform(Xword_test)
+    Xwordie_train_df = pd.DataFrame(Xwordie_train,
+                                    columns=[str(i)+'_'+str(b) for b in np.arange(1,Xwordie_train.shape[1]+1)])
+    Xwordie_test_df = pd.DataFrame(Xwordie_test,
+                                   columns=[str(i)+'_'+str(b) for b in np.arange(1,Xwordie_test.shape[1]+1)])
+    df_train = pd.concat([df_train,Xwordie_train_df], axis=1)
+    df_test = pd.concat([df_test,Xwordie_test_df], axis=1)
+    self.tfidf_list.append(tfidf)
+    self.tsvd_list.append(tsvd)
+```
+
