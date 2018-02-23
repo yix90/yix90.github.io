@@ -11,10 +11,9 @@ date: 2018-02-23
 MBTI, short for Myers-Briggs Type Indicator, is a personality metric developed by Katharine Cook Briggs and her daughter Isabel Briggs Myers, based on Carl Jung's theory on psychological types. Today, it is a common tool used by individuals and organizations alike, be it to better understand themselves or to optimize workplace dynamics.
 
 Each person is tested in 4 different areas:
-* Extraversion/Introversion
-* Sensing/Intuition
-* Thinking/Feeling
-* Judging/Perceiving
+
+![mbtimodel](mbtimodel.jpg)
+source: CPP Inc.
 
 Each person would be typed with 4 letters according to MBTI. So for example for someone whose type is ENFJ, this means that this person is extraverted, intuitive, feeling and judging. I hope this little write-up is succinct enough, but if it is not then please feel free to refer to the official [MBTI page](http://www.myersbriggs.org/my-mbti-personality-type/mbti-basics/home.htm?bhcp=1) to find out more. 
 
@@ -22,11 +21,11 @@ The most common way of finding out of our type is to visit free personality test
 
 > 25. My idea of relaxation involves reading a book by the beach
 > 
- * [] Strongly Disagree
- * [] Disagree
- * [] Neutral
- * [] Agree
- * [] Strongly Agree
+ * Strongly Disagree
+ * Disagree
+ * Neutral
+ * Agree
+ * Strongly Agree
 
 If you haven't noticed yet, this presents a series of problems, in no order of magnitude:
 
@@ -215,6 +214,10 @@ Once again, you may notice other non-regular text like @mentions, #tags, \*empha
 I also extracted the number of MBTI mentions (since the dataset was from a personality discussion forum) and Enneagram references. Sidetrack - The Enneagram is another form of personality typology which could potentially serve as my next project, but not now. Priorities. Meanwhile, you may also take the [test](https://www.eclecticenergies.com/enneagram/test) if you are interested :wink:
 
 Other data available includes word count, character count, number of fully capitalized words (that are not MBTI references) etc which are also incorporated as features.
+
+Here's a cursory view of the dataframe after the processing:
+
+![df_meta](df_meta.png)
 
 ### Parts of Speech (POS) tagging
 
@@ -445,4 +448,237 @@ for i in np.arange(1,4):
     self.tfidf_list.append(tfidf)
     self.tsvd_list.append(tsvd)
 ```
+Oh yes, I should explain TSVD.
 
+TSVD, from my own limited understanding, is a reduction method much like Principal Component Analysis (PCA), except that it only 'shrinks' vertically. It is commonly used together with TFIDF since TSVD has the ability to 'merge' together word vectors that have similar scores in the dataset (in simple stats language, high positive correlation). Such modelling would tend to group together words that belong to similar topics, since they appear in large amounts in a small subset of documents.
+
+Ok I admit, I just plug and played :X
+
+So in my case, the end result would be 1500 truncated columns of various ngram range. This method also helps manage computer memory :wink:
+
+Unfortunately for me I kinda 'lost' the words used in the process so...
+
+### Feature removal
+
+Sad to say, there are some features that I just have to remove. For the purpose of my use case (classify text data), it would be unrealistic for such features to be used. Not like we talk about MBTI all the time, do we?
+
+```python
+X_train.drop(['n_video','n_links','n_image','n_otherlink','mention_count','hashtag_count','mbti_ref_count','ennea_count',
+                          'bracket_count'], axis=1, inplace=True)
+```
+
+### Scaling
+
+I did two types of scaling: Standard Scaling and MinMax Scaling.
+
+Standard Scaling works to 'level' the field across column features. Quite commonly in machine learning execution, we get imbalanced representation where one feature would have a range of 100000 while another probably only has a range of 0.001 (and therefore, the former would significantly affect the scoring function more). What Standard Scaling does is simply subtract each value from the mean and then divide by the standard deviation. Naturally, features with large ranges gets 'penalized' more heavily.
+
+I forgot to plot using my own data, so hopefully this imagery from a class project would help :sweat_smile:
+
+Before:
+![ss_before](ss_before.png)
+After:
+![ss_after](ss_after.png)
+
+I can't scale this pesky shit :angry:
+
+So...I only applied this on the other metadata that I ported over.
+
+MinMax Scaling was done primarily for the next feature selection technique that I used: Chi square. Chi square selection only works with positive values, so I kinda have to 'scale up' the negative values up. What this scaling essentially does is to scale the data to a specified range, namely between 1 and 0
+
+(On hindsight I probably didn't need the standard scaling but heck)
+
+### Under-Sampling the majority class
+
+We still do have imbalanced datasets (for E/I and S/N) which necessitates the use of stratified sampling during the train test split. An imbalanced dataset is generally bad for machine learning as it will tend to predict more readily the majority class. One way to provide the balance is to either under-sample the majority class or to over-sample the minority class. I chose to do the former only. Somehow.
+
+```python
+if imbl:
+    imbler = RandomUnderSampler(random_state=42)
+    X_train, y_train = imbler.fit_sample(X_train, y_train)
+```
+
+### More Feature reduction!
+
+Use Chi square. Once again, I can't explain it :pensive: except that I reduced it further to 100 features.
+
+Anyway! Here are the results in the case of Introversion/Extraversion, top ten!:
+
+|Features|	Scores|	p-value
+-|-------|--------|-------
+37|	1_15|	5.958086|	0.014650
+33|	1_11|	5.582567|	0.018140
+3|	n_caps_char|	4.601679|	0.031941
+2|	n_caps|	3.875362|	0.049000
+30|	1_7|	3.746265|	0.052926
+38|	1_16|	3.508324|	0.061061
+28|	1_3|	3.445238|	0.063434
+31|	1_9|	3.156438|	0.075628
+32|	1_10|	2.853656|	0.091166
+27|	1_2|	2.413678|	0.120279
+
+### At long last, modelling!
+
+Using the good old Logistic Regression with lasso penalty,
+
+**Result:**
+
+__Introversion/Extraversion__
+
+Score: 0.820749279539
+
+Cross val score: [ 0.8261563   0.80718954  0.81730769  0.82670906  0.80830671]
+
+type|precision|recall|f1-score|support
+----------|----------|------------|--------|----------
+  Introvert|       0.93|      0.83|      0.88 |     1335
+  Extrovert|       0.58|      0.78|      0.67 |     400
+avg / total|       0.85|      0.82|      0.83 |     1735
+
+
+| Introvert_pred|  Extrovert_pred
+--------|--------------|---------------    
+Introvert_true|            1113|              222
+Extrovert_true|              89|              311
+
+Sorry I didn't really keep records of other models, but this works!
+
+We shall look at other 3 types:
+
+__Sensing/Intuition__
+
+Score: 0.821902017291
+
+Cross val score: [ 0.83544304  0.82446809  0.83028721  0.83018868  0.83684211]
+
+type|precision|    recall|  f1-score|   support
+----|----------|----------|--------|-----------
+  Intuitive|       0.97|      0.82|      0.89|      1496
+    Sensing|       0.42|      0.82|      0.56|       239
+avg / total|       0.89|      0.82|      0.84|      1735
+
+| Intuitive_pred|  Sensing_pred
+--|--------------|----------------
+Intuitive_true|            1231|            265
+Sensing_true|                44|            195
+
+__Thinking/Feeling__
+
+Score: 0.841498559078
+
+Cross val score: [ 0.82605364  0.8696331   0.84748428  0.83333333  0.84507042]
+
+type|precision|    recall|  f1-score|   support
+----|----------|--------|---------|---------
+    Feeling|       0.85|      0.86|      0.85|       939
+   Thinking|       0.83|      0.83|      0.83|       796
+avg / total|       0.84|      0.84|      0.84|      1735
+
+|Feeling_pred|  Thinking_pred
+-|-------------|---------
+Feeling_true|            803|136
+Thinking_true|           139|657
+
+
+__Judging/Perceiving__
+
+Score: 0.796541786744
+
+Cross val score: [ 0.79491833  0.79855465  0.79597438  0.78405931  0.79851439]
+
+type| precision|    recall|  f1-score|   support
+----|---------|---------|---------|-----------
+ Perceiving|       0.84|      0.82|      0.83|      1048
+    Judging|       0.73|      0.77|      0.75|       687
+avg / total|       0.80|      0.80|      0.80|      1735
+
+| Perceiving_pred|  Judging_pred
+-|---------------|-------------|
+Perceiving_true|              856|            192
+Judging_true|                 161|            526
+
+
+## The TPOT fallacy
+
+When, in your data science work, you reached the modelling stage where you need to figure out the best model to use, and the process becomes iterative...
+
+TPOT to the rescue! Given a few random parameters, it will iterate for you all sorts of models with different hyperparameters and even some scaling to give you the best possible model.
+
+```python
+from tpot import TPOTClassifier
+tpot = TPOTClassifier(generations=10, population_size=30, verbosity=2, scoring='f1')
+tpot.fit(X_train, y_train)
+print(tpot.score(X_test, y_test))
+tpot.export('tpot_E_try.py')
+```
+```
+Generation 1 - Current best internal CV score: 0.817470446061
+                                                                               
+Generation 2 - Current best internal CV score: 0.817470446061
+                                                                               
+Generation 3 - Current best internal CV score: 0.817470446061
+                                                                               
+Generation 4 - Current best internal CV score: 0.817470446061
+                                                                               
+Generation 5 - Current best internal CV score: 0.818117900031
+                                                                               
+Generation 6 - Current best internal CV score: 0.818117900031
+                                                                               
+Generation 7 - Current best internal CV score: 0.818117900031
+                                                                               
+Generation 8 - Current best internal CV score: 0.819767096337
+                                                                               
+Generation 9 - Current best internal CV score: 0.819767096337
+                                                                               
+Generation 10 - Current best internal CV score: 0.819767096337
+                                                             
+
+Best pipeline: LogisticRegression(FastICA(ZeroCount(MaxAbsScaler(input_matrix)), tol=0.1), C=20.0, dual=False, penalty=l1)
+```
+
+OR SO I THOUGHT. AGAIN.
+
+Score: 0.665254237288 :expressionless:
+
+It happened similarly with other TPOT runs for other 3 MBTI types.
+
+Look at all the cheem modelling, and they still cannot beat the simple model!
+
+Important life lesson as a data scientist: Cheem and fancy isn't everything!
+
+## Whats next
+
+I wrote another class that would train incoming inputs for use in training (for application!)
+
+Basically I had to condense all the processing code into a class for preprocessing, followed by 'borrowing' loads of model instances trained within the instances of the 4 MBTI types.
+
+```python
+#Create an instance
+Someguy = NewBerd()
+
+#Perform preprocessing for each line of text
+for line in mbti_textlist:
+    Someguy.preprocess(line, web=False)
+    
+#Predict!
+more_magic(Someguy)
+```
+
+Now that you made it to this point, I hope you have not forgotten about the webapp hahah.
+
+[Click here!](https://yix90.github.io)
+
+## Future work
+
+I have to admit, I am abit lucky in a sense that the modeling turned out not too badly. There is still much to be done, both for this project and my own data science journey:
+
+* Be able to understand the models that I have utilized so far
+* Perform some more feature extraction from images and webpages, followed by topic modelling (I haven't forgotten!)
+* Try other feature reduction techniques
+* Try using other predicting models
+* Try my hand at deep learning
+
+On top of doing the above, I also hope to explore the following:
+
+* Perform an Enneagram classifier
+* Combine the MBTI and Enneagram classifier models and see how each MBTI type relates to each Enneagram type.
