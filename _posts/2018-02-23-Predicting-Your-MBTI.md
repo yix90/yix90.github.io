@@ -21,11 +21,11 @@ The most common way of finding out of our type is to visit free personality test
 
 > 25. My idea of relaxation involves reading a book by the beach
 > 
- * Strongly Disagree
- * Disagree
- * Neutral
- * Agree
- * Strongly Agree
+> * Strongly Disagree
+> * Disagree
+> * Neutral
+> * Agree
+> * Strongly Agree
 
 If you haven't noticed yet, this presents a series of problems, in no order of magnitude:
 
@@ -504,7 +504,7 @@ Use Chi square. Once again, I can't explain it :pensive: except that I reduced i
 
 Anyway! Here are the results in the case of Introversion/Extraversion, top ten!:
 
-|Features|	Scores|	p-value
+-|Features|	Scores|	p-value
 -|-------|--------|-------
 37|	1_15|	5.958086|	0.014650
 33|	1_11|	5.582567|	0.018140
@@ -536,7 +536,7 @@ type|precision|recall|f1-score|support
 avg / total|       0.85|      0.82|      0.83 |     1735
 
 
-| Introvert_pred|  Extrovert_pred
+--| Introvert_pred|  Extrovert_pred
 --------|--------------|---------------    
 Introvert_true|            1113|              222
 Extrovert_true|              89|              311
@@ -557,7 +557,7 @@ type|precision|    recall|  f1-score|   support
     Sensing|       0.42|      0.82|      0.56|       239
 avg / total|       0.89|      0.82|      0.84|      1735
 
-| Intuitive_pred|  Sensing_pred
+--| Intuitive_pred|  Sensing_pred
 --|--------------|----------------
 Intuitive_true|            1231|            265
 Sensing_true|                44|            195
@@ -574,8 +574,8 @@ type|precision|    recall|  f1-score|   support
    Thinking|       0.83|      0.83|      0.83|       796
 avg / total|       0.84|      0.84|      0.84|      1735
 
-|Feeling_pred|  Thinking_pred
--|-------------|---------
+--|Feeling_pred|  Thinking_pred
+--|-------------|---------
 Feeling_true|            803|136
 Thinking_true|           139|657
 
@@ -592,8 +592,8 @@ type| precision|    recall|  f1-score|   support
     Judging|       0.73|      0.77|      0.75|       687
 avg / total|       0.80|      0.80|      0.80|      1735
 
-| Perceiving_pred|  Judging_pred
--|---------------|-------------|
+--| Perceiving_pred|  Judging_pred
+--|---------------|-------------|
 Perceiving_true|              856|            192
 Judging_true|                 161|            526
 
