@@ -4,7 +4,7 @@ title: "Predicting Your MBTI"
 date: 2018-02-23
 ---
 
-# Predicting MBTI types using text alone
+# Predicting your MBTI type using text data
 
 ## A brief introduction
 
