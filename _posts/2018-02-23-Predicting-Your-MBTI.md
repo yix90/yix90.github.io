@@ -4,7 +4,7 @@ title: "Predicting Your MBTI"
 date: 2018-02-23
 ---
 
-# Predicting MBTI types using text alone
+# Predicting your MBTI type using text data
 
 ## A brief introduction
 
@@ -21,11 +21,11 @@ The most common way of finding out of our type is to visit free personality test
 
 > 25. My idea of relaxation involves reading a book by the beach
 > 
- * Strongly Disagree
- * Disagree
- * Neutral
- * Agree
- * Strongly Agree
+> * Strongly Disagree
+> * Disagree
+> * Neutral
+> * Agree
+> * Strongly Agree
 
 If you haven't noticed yet, this presents a series of problems, in no order of magnitude:
 
@@ -504,7 +504,7 @@ Use Chi square. Once again, I can't explain it :pensive: except that I reduced i
 
 Anyway! Here are the results in the case of Introversion/Extraversion, top ten!:
 
-|Features|	Scores|	p-value
+-|Features|	Scores|	p-value
 -|-------|--------|-------
 37|	1_15|	5.958086|	0.014650
 33|	1_11|	5.582567|	0.018140
@@ -531,15 +531,15 @@ Cross val score: [ 0.8261563   0.80718954  0.81730769  0.82670906  0.80830671]
 
 type|precision|recall|f1-score|support
 ----------|----------|------------|--------|----------
-  Introvert|       0.93|      0.83|      0.88 |     1335
-  Extrovert|       0.58|      0.78|      0.67 |     400
-avg / total|       0.85|      0.82|      0.83 |     1735
+Introvert| 0.93| 0.83| 0.88 |1335
+Extrovert|0.58|0.78|0.67 |400
+avg / total| 0.85| 0.82| 0.83 |1735
 
 
-| Introvert_pred|  Extrovert_pred
+--|Introvert_pred|Extrovert_pred
 --------|--------------|---------------    
-Introvert_true|            1113|              222
-Extrovert_true|              89|              311
+Introvert_true| 1113|  222
+Extrovert_true|  89| 311
 
 Sorry I didn't really keep records of other models, but this works!
 
@@ -551,16 +551,16 @@ Score: 0.821902017291
 
 Cross val score: [ 0.83544304  0.82446809  0.83028721  0.83018868  0.83684211]
 
-type|precision|    recall|  f1-score|   support
+type|precision|recall|f1-score|support
 ----|----------|----------|--------|-----------
-  Intuitive|       0.97|      0.82|      0.89|      1496
-    Sensing|       0.42|      0.82|      0.56|       239
-avg / total|       0.89|      0.82|      0.84|      1735
+Intuitive| 0.97| 0.82| 0.89|1496
+Sensing|  0.42| 0.82|  0.56|  239
+avg / total|  0.89| 0.82| 0.84|1735
 
-| Intuitive_pred|  Sensing_pred
+--| Intuitive_pred|  Sensing_pred
 --|--------------|----------------
-Intuitive_true|            1231|            265
-Sensing_true|                44|            195
+Intuitive_true| 1231| 265
+Sensing_true| 44|195
 
 __Thinking/Feeling__
 
@@ -570,14 +570,14 @@ Cross val score: [ 0.82605364  0.8696331   0.84748428  0.83333333  0.84507042]
 
 type|precision|    recall|  f1-score|   support
 ----|----------|--------|---------|---------
-    Feeling|       0.85|      0.86|      0.85|       939
-   Thinking|       0.83|      0.83|      0.83|       796
-avg / total|       0.84|      0.84|      0.84|      1735
+Feeling| 0.85|0.86|0.85|939
+Thinking|0.83|0.83|0.83|796
+avg / total|0.84|0.84|0.84|1735
 
-|Feeling_pred|  Thinking_pred
--|-------------|---------
-Feeling_true|            803|136
-Thinking_true|           139|657
+--|Feeling_pred|  Thinking_pred
+--|-------------|---------
+Feeling_true|803|136
+Thinking_true|139|657
 
 
 __Judging/Perceiving__
@@ -588,14 +588,14 @@ Cross val score: [ 0.79491833  0.79855465  0.79597438  0.78405931  0.79851439]
 
 type| precision|    recall|  f1-score|   support
 ----|---------|---------|---------|-----------
- Perceiving|       0.84|      0.82|      0.83|      1048
-    Judging|       0.73|      0.77|      0.75|       687
-avg / total|       0.80|      0.80|      0.80|      1735
+Perceiving|0.84|0.82|0.83|1048
+Judging|0.73|0.77|0.75|687
+avg / total|0.80|0.80|0.80|1735
 
-| Perceiving_pred|  Judging_pred
--|---------------|-------------|
-Perceiving_true|              856|            192
-Judging_true|                 161|            526
+--| Perceiving_pred|  Judging_pred
+--|---------------|-------------|
+Perceiving_true|856|192
+Judging_true|161|526
 
 
 ## The TPOT fallacy
