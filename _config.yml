@@ -1,3 +1,5 @@
 theme: jekyll-theme-cayman
+markdown:    kramdown
+highlighter: pygments
 permalink: /blog/:year/:month/:day/:title
 google_analytics: UA-115542586-1

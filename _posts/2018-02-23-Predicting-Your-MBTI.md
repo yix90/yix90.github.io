@@ -12,15 +12,15 @@ MBTI, short for Myers-Briggs Type Indicator, is a personality metric developed b
 
 Each person is tested in 4 different areas:
 
-![mbtimodel](mbtimodel.jpg)
+![mbtimodel]({{"/images/mbtimodel.jpg|absolute_url}})
 source: CPP Inc.
 
-Each person would be typed with 4 letters according to MBTI. So for example for someone whose type is ENFJ, this means that this person is extraverted, intuitive, feeling and judging. I hope this little write-up is succinct enough, but if it is not then please feel free to refer to the official [MBTI page](http://www.myersbriggs.org/my-mbti-personality-type/mbti-basics/home.htm?bhcp=1) to find out more. 
+Each person would be typed with 4 letters according to MBTI. So for example for someone whose type is ENFJ, this means that this person is extraverted, intuitive, feeling and judging. I hope this little write-up is succinct enough, but if it is not then please feel free to refer to the official [MBTI page](http://www.myersbriggs.org/my-mbti-personality-type/mbti-basics/home.htm?bhcp=1) to find out more.
 
 The most common way of finding out of our type is to visit free personality test websites, where they would require you to answer questions after questions after questions (or statements) in order to determine your type, as accurately as possible. More often than not, these questions relate directly to the type characteristic which requires you to rate how well you 'relate' to the question asked. For example:
 
 > 25. My idea of relaxation involves reading a book by the beach
-> 
+>
 > * Strongly Disagree
 > * Disagree
 > * Neutral
@@ -42,7 +42,7 @@ The question wasn't picked up from any site in particular by the way, I made it 
 
 My project shall attempt to aid users in having a seamless experience in finding out their MBTI type. Instead of having the user dedicate his/her precious time and brain energy to processing all the questions, the machine only needs to pick up the existing messages produced by the user to predict their MBTI type!
 
-Read on if you would like to understand the how, but beware, it can get a little technical. Otherwise, click [here](https://yix90.github.io) to go straight to the webapp for some fun!
+Read on if you would like to understand the how, but beware, it can get a little technical. Otherwise, click [here]() to go straight to the webapp for some fun!
 
 ### How
 The model makes use of forum posts from personalitycafe.com for training. Luckily for me, this dataset is already made available on Kaggle in the form of 50 posts per person of a certain MBTI type. Not a competition piece though, just a dataset for us to play around with.
@@ -53,13 +53,13 @@ Here is a preview of the first line:
 
 --------------------------------------------
 
-type: 
-``` 
+type:
+```
 INFJ
 ```
 
-posts: 
-``` 
+posts:
+```
 "'http://www.youtube.com/watch?v=qsXHcwe3krw|||http://41.media.tumblr.com/tumblr_lfouy03PMA1qa1rooo1_500.jpg|||enfp and intj moments https://www.youtube.com/watch?v=iz7lE1g4XM4 sportscenter not top ten plays https://www.youtube.com/watch?v=uCdfze1etec pranks|||What has been the most life-changing experience in your life?|||http://www.youtube.com/watch?v=vXZeYwwRDw8 http://www.youtube.com/watch?v=u8ejam5DP3E On repeat for most of today.|||May the PerC Experience immerse you.|||The last thing my INFJ friend posted on his facebook before committing suicide the next day. Rest in peace~ http://vimeo.com/22842206|||Hello ENFJ7. Sorry to hear of your distress. It's only natural for a relationship to not be perfection all the time in every moment of existence. Try to figure the hard times as times of growth, as...|||84389 84390 http://wallpaperpassion.com/upload/23700/friendship-boy-and-girl-wallpaper.jpg http://assets.dornob.com/wp-content/uploads/2010/04/round-home-design.jpg ...|||Welcome and stuff.|||http://playeressence.com/wp-content/uploads/2013/08/RED-red-the-pokemon-master-32560474-450-338.jpg Game. Set. Match.|||Prozac, wellbrutin, at least thirty minutes of moving your legs (and I don't mean moving them while sitting in your same desk chair), weed in moderation (maybe try edibles as a healthier alternative...|||Basically come up with three items you've determined that each type (or whichever types you want to do) would more than likely use, given each types' cognitive functions and whatnot, when left by...|||All things in moderation. Sims is indeed a video game, and a good one at that. Note: a good one at that is somewhat subjective in that I am not completely promoting the death of any given Sim...|||Dear ENFP: What were your favorite video games growing up and what are your now, current favorite video games? :cool:|||https://www.youtube.com/watch?v=QyPqT8umzmY|||It appears to be too late. :sad:|||There's someone out there for everyone.|||Wait... I thought confidence was a good thing.|||I just cherish the time of solitude b/c i revel within my inner world more whereas most other time i'd be workin... just enjoy the me time while you can. Don't worry, people will always be around to...|||Yo entp ladies... if you're into a complimentary personality,well, hey.|||... when your main social outlet is xbox live conversations and even then you verbally fatigue quickly.|||http://www.youtube.com/watch?v=gDhy7rdfm14 I really dig the part from 1:46 to 2:50|||http://www.youtube.com/watch?v=msqXffgh7b8|||Banned because this thread requires it of me.|||Get high in backyard, roast and eat marshmellows in backyard while conversing over something intellectual, followed by massages and kisses.|||http://www.youtube.com/watch?v=Mw7eoU3BMbE|||http://www.youtube.com/watch?v=4V2uYORhQOk|||http://www.youtube.com/watch?v=SlVmgFQQ0TI|||Banned for too many b's in that sentence. How could you! Think of the B!|||Banned for watching movies in the corner with the dunces.|||Banned because Health class clearly taught you nothing about peer pressure.|||Banned for a whole host of reasons!|||http://www.youtube.com/watch?v=IRcrv41hgz4|||1) Two baby deer on left and right munching on a beetle in the middle. 2) Using their own blood, two cavemen diary today's latest happenings on their designated cave diary wall. 3) I see it as...|||a pokemon world an infj society everyone becomes an optimist|||49142|||http://www.youtube.com/watch?v=ZRCEq_JFeFM|||http://discovermagazine.com/2012/jul-aug/20-things-you-didnt-know-about-deserts/desert.jpg|||http://oyster.ignimgs.com/mediawiki/apis.ign.com/pokemon-silver-version/d/dd/Ditto.gif|||http://www.serebii.net/potw-dp/Scizor.jpg|||Not all artists are artists because they draw. It's the idea that counts in forming something of your own... like a signature.|||Welcome to the robot ranks, person who downed my self-esteem cuz I'm not an avid signature artist like herself. :proud:|||Banned for taking all the room under my bed. Ya gotta learn to share with the roaches.|||http://www.youtube.com/watch?v=w8IgImn57aQ|||Banned for being too much of a thundering, grumbling kind of storm... yep.|||Ahh... old high school music I haven't heard in ages. http://www.youtube.com/watch?v=dcCRUPCdB1w|||I failed a public speaking class a few years ago and I've sort of learned what I could do better were I to be in that position again. A big part of my failure was just overloading myself with too...|||I like this person's mentality. He's a confirmed INTJ by the way. http://www.youtube.com/watch?v=hGKLI-GEc6M|||Move to the Denver area and start a new life for myself.'"
 ```
 -------------------------------------------
@@ -114,7 +114,7 @@ Congratulations for making to this point. From here on, I shall go into a little
 
 ### Data observation and cleaning
 
-As mentioned, the dataset comes with just two columns: The MBTI type itself and 50 posts made by the person of the said MBTI type. 
+As mentioned, the dataset comes with just two columns: The MBTI type itself and 50 posts made by the person of the said MBTI type.
 
 We have:
 * No null values
@@ -182,7 +182,7 @@ This looks a lot better than the previous 16-class variable, though we still see
 
 **Assumption made:** Each letter type is independent of other types i.e. A person's introversion/extraversion is totally not related to their judgement/perception. Nevertheless, we can still test them:
 
-Correlation - How close each feature is affected by another. 
+Correlation - How close each feature is affected by another.
 
 For example, if the amount of sales drops/increases definitely with an increase in price, we can say that amount of sales and price are correlated. Whereas in the case where the number of shoppers does not increase/decrease significantly with the changes in pricing, we can say that they have little to no correlation.
 
@@ -613,25 +613,25 @@ tpot.export('tpot_E_try.py')
 ```
 ```
 Generation 1 - Current best internal CV score: 0.817470446061
-                                                                               
+
 Generation 2 - Current best internal CV score: 0.817470446061
-                                                                               
+
 Generation 3 - Current best internal CV score: 0.817470446061
-                                                                               
+
 Generation 4 - Current best internal CV score: 0.817470446061
-                                                                               
+
 Generation 5 - Current best internal CV score: 0.818117900031
-                                                                               
+
 Generation 6 - Current best internal CV score: 0.818117900031
-                                                                               
+
 Generation 7 - Current best internal CV score: 0.818117900031
-                                                                               
+
 Generation 8 - Current best internal CV score: 0.819767096337
-                                                                               
+
 Generation 9 - Current best internal CV score: 0.819767096337
-                                                                               
+
 Generation 10 - Current best internal CV score: 0.819767096337
-                                                             
+
 
 Best pipeline: LogisticRegression(FastICA(ZeroCount(MaxAbsScaler(input_matrix)), tol=0.1), C=20.0, dual=False, penalty=l1)
 ```
@@ -659,7 +659,7 @@ Someguy = NewBerd()
 #Perform preprocessing for each line of text
 for line in mbti_textlist:
     Someguy.preprocess(line, web=False)
-    
+
 #Predict!
 more_magic(Someguy)
 ```
