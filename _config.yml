@@ -1,5 +1,5 @@
 theme: jekyll-theme-cayman
-markdown:    kramdown
-highlighter: pygments
+name: The Tamago Data Science Blog
+markdown: kramdown
 permalink: /blog/:year/:month/:day/:title
 google_analytics: UA-115542586-1

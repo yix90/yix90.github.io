@@ -12,7 +12,7 @@ MBTI, short for Myers-Briggs Type Indicator, is a personality metric developed b
 
 Each person is tested in 4 different areas:
 
-![mbtimodel]({{"/images/mbtimodel.jpg|absolute_url}})
+![mbtimodel](https://github.com/yix90/yix90.github.io/blob/master/images/mbtimodel.jpg)
 source: CPP Inc.
 
 Each person would be typed with 4 letters according to MBTI. So for example for someone whose type is ENFJ, this means that this person is extraverted, intuitive, feeling and judging. I hope this little write-up is succinct enough, but if it is not then please feel free to refer to the official [MBTI page](http://www.myersbriggs.org/my-mbti-personality-type/mbti-basics/home.htm?bhcp=1) to find out more.
@@ -31,18 +31,17 @@ If you haven't noticed yet, this presents a series of problems, in no order of m
 
 1. We'd inherently know that this question refers to Extroversion/Introversion, and hence may tend to answer based on how we identify rather than purely relating to the question asked.
     * In other words, we'd answer with some form of a bias i.e. Who we think we are or want to be vs who we really are.
-    * Come to think of it, regarding the spelling of extrovert or extravert (oh good lord spellcheck got activated for the latter!), I found [this](https://blogs.scientificamerican.com/beautiful-minds/the-difference-between-extraversion-and-extroversion/).
 2. I identify as a strong introvert but I don't really dig reading a book by the beach, nor do people from landlocked areas etc...
 3. We cannot, in some senses, identify by how much we agree/disagree with the statement/question. However, in order for the model to work, we have to choose a side. Strongly.
 4. Answering so many questions is already by itself a big time waster, not to mention it being a tiring process.
 
-The question wasn't picked up from any site in particular by the way, I made it up!
+The question wasn't picked up from any site in particular by the way, I made it up.
 
 ## Proposal
 
 My project shall attempt to aid users in having a seamless experience in finding out their MBTI type. Instead of having the user dedicate his/her precious time and brain energy to processing all the questions, the machine only needs to pick up the existing messages produced by the user to predict their MBTI type!
 
-Read on if you would like to understand the how, but beware, it can get a little technical. Otherwise, click [here]() to go straight to the webapp for some fun!
+Read on if you would like to understand the how, but beware, it can get a little technical. Meanwhile, I am still in the works of getting a webapp plus a Telegram bot for a comprehensive experience, stay tuned!
 
 ### How
 The model makes use of forum posts from personalitycafe.com for training. Luckily for me, this dataset is already made available on Kaggle in the form of 50 posts per person of a certain MBTI type. Not a competition piece though, just a dataset for us to play around with.
@@ -121,15 +120,17 @@ We have:
 * Shape = (8675, 2)
 * Nothing else significant to note (for now)
 
+Lucky!
+
 ### Target variable
 
-As with any Machine Learning tasks, we must first define our target variable. There are a total of 16 different combinations of MBTI types, which means we would have a 16-class classification problem to solve
+As with any Machine Learning tasks, we must first define our target variable. There are a total of 16 different combinations of MBTI types, which means we would have a 16-class classification problem to solve-
 
 ...or do we?
 
-Here is a breakdown on the number of people per MBTI type (in yellow), benchmarked against the global population percentage representation of each type mapped onto the graph (taken from [careerplanner.com](https://www.careerplanner.com/MB2/TypeInPopulation.cfm)):
+Here is a breakdown on the number of people per MBTI type (in yellow) contained in the dataset, benchmarked against the global population percentage representation of each type mapped onto the graph (taken from [careerplanner.com](https://www.careerplanner.com/MB2/TypeInPopulation.cfm)):
 
-![mbti_comparison](mbti_comparison.png)
+![mbti_comparison](https://github.com/yix90/yix90.github.io/blob/master/images/mbti_comparison.png)
 
 And here is the breakdown of the total number of people of each type in the dataset:
 
@@ -151,8 +152,12 @@ ESFP      48
 ESFJ      42
 ESTJ      39
 ```
+That means to say, if you take the majority (INFP) versus the minority (ESTJ), you get a ratio of 97.9%!
+
+Coincidentally, they are also polar opposites of each other, in terms of type!
 
 On first glance this would look like a very bleak start to the project since it is heavily imbalanced...good luck to me.
+For my readers who are not so familiar with machine learning yet, having an imbalanced dataset is not good for business in general as the machine will tend to favor the prediction of the majority class, which is kind of 'normal' until you realise that they ignore our minority class almost totally. No matter how small the representation, we still want the machine to be able to predict the minority type.
 
 **\*Ok actually I can fix this\***
 
@@ -166,17 +171,18 @@ mbtitypes_all['is_J'] = mbtitypes_all['type'].apply(lambda x: 1 if x[3] == 'J' e
 mbtitypes_all.columns = ['type','is_E','is_S','is_T','is_J']
 mbtitypes_all.head()
 ```
-type|is_E|is_S|is_T|is_J
-----|----|----|----|----
-INFJ|0|0|0|1
-ENTP|1|0|1|0
-INTP|0|0|1|0
-INTJ|0|0|1|1
-ENTJ|1|0|1|1
+|---
+| type|is_E|is_S|is_T|is_J|
+| ----|----|----|----|----|
+| INFJ|0|0|0|1|
+| ENTP|1|0|1|0|
+| INTP|0|0|1|0|
+| INTJ|0|0|1|1|
+| ENTJ|1|0|1|1|
 
 Here we visualize the classifiers once again:
 
-![4_piechart](4_piechart.png)
+![4_piechart](https://github.com/yix90/yix90.github.io/blob/master/images/4_piechart.png)
 
 This looks a lot better than the previous 16-class variable, though we still see imbalanced targets for E/I and S/N. We shall deal with them in due time.
 
@@ -186,7 +192,7 @@ Correlation - How close each feature is affected by another.
 
 For example, if the amount of sales drops/increases definitely with an increase in price, we can say that amount of sales and price are correlated. Whereas in the case where the number of shoppers does not increase/decrease significantly with the changes in pricing, we can say that they have little to no correlation.
 
-![4type_corr](4type_corr.png)
+![4type_corr](https://github.com/yix90/yix90.github.io/blob/master/images/4type_corr.png)
 
 The correlation for all 4 types are very close to 0, which is a good sign.
 
@@ -205,7 +211,7 @@ I'll get to the other data (as mentioned in TLDR) later, I promise.
 
 Video, image and other links can potentially add to the dataset, other than their mere count. We can get video titles from video links, perform image content analysis for image links, or simply category identifying for other links. All these data can potentially be used for topic modelling to find out what kind of topics do people of a certain MBTI type care about collectively that the other type does not care as much about.
 
-Unfortunately I only went as far as extract the video title and nothing else. Sorry... :sob:
+Unfortunately I only went as far as extract the video title and nothing else. Sorry...
 
 ##### Other Metadata
 
@@ -217,7 +223,7 @@ Other data available includes word count, character count, number of fully capit
 
 Here's a cursory view of the dataframe after the processing:
 
-![df_meta](df_meta.png)
+![df_meta](https://github.com/yix90/yix90.github.io/blob/master/images/df_meta.png)
 
 ### Parts of Speech (POS) tagging
 
@@ -335,67 +341,67 @@ For interests sake, here is the full list of tags used by nltk, minus the punctu
 ```
 #For reference ;)
 ```
-Tag|Description
----|------------
-CC| Coordinating conjunction
-CD| Cardinal number
-DT| Determiner
-EX| Existential there
-FW| Foreign word
-IN| Preposition or subordinating conjunction
-JJ| Adjective
-JJR| Adjective, comparative
-JJS| Adjective, superlative
-LS| List item marker
-MD| Modal
-NN| Noun, singular or mass
-NNS| Noun, plural
-NNP| Proper noun, singular
-NNPS| Proper noun, plural
-PDT| Predeterminer
-POS| Possessive ending
-PRP| Personal pronoun
-PRP\$| Possessive pronoun
-RB| Adverb
-RBR| Adverb, comparative
-RBS| Adverb, superlative
-RP| Particle
-SYM| Symbol
-TO| to
-UH| Interjection
-VB| Verb, base form
-VBD| Verb, past tense
-VBG| Verb, gerund or present participle
-VBN| Verb, past participle
-VBP| Verb, non­3rd person singular present
-VBZ| Verb, 3rd person singular present
-WDT| Wh­determiner
-WP| Wh­pronoun
-WP\$| Possessive wh­pronoun
-WRB| Wh­adverb
+ Tag|Description
+ ---|------------
+ CC| Coordinating conjunction
+ CD| Cardinal number
+ DT| Determiner
+ EX| Existential there
+ FW| Foreign word
+ IN| Preposition or subordinating conjunction
+ JJ| Adjective
+ JJR| Adjective, comparative
+ JJS| Adjective, superlative
+ LS| List item marker
+ MD| Modal
+ NN| Noun, singular or mass
+ NNS| Noun, plural
+ NNP| Proper noun, singular
+ NNPS| Proper noun, plural
+ PDT| Predeterminer
+ POS| Possessive ending
+ PRP| Personal pronoun
+ PRP\$| Possessive pronoun
+ RB| Adverb
+ RBR| Adverb, comparative
+ RBS| Adverb, superlative
+ RP| Particle
+ SYM| Symbol
+ TO| to
+ UH| Interjection
+ VB| Verb, base form
+ VBD| Verb, past tense
+ VBG| Verb, gerund or present participle
+ VBN| Verb, past participle
+ VBP| Verb, non­3rd person singular present
+ VBZ| Verb, 3rd person singular present
+ WDT| Wh­determiner
+ WP| Wh­pronoun
+ WP\$| Possessive wh­pronoun
+ WRB| Wh­adverb
 
 
 We can already notice that there are multiple tags for each word type, each having a different function. This discrimination may be important for word generation to teach the machine how to write sentences properly, but once again, this is not my use case.
 
 Now compare that with POS tags by Stanford NLP:
 
-Tag|Meaning|English Examples
----|--------|-----------
-ADJ|adjective|	new, good, high, special, big, local
-ADP|adposition|	on, of, at, with, by, into, under
-ADV|adverb|	really, already, still, early, now
-CONJ|conjunction|	and, or, but, if, while, although
-DET|determiner, article|	the, a, some, most, every, no, which
-NOUN|noun|	year, home, costs, time, Africa
-NUM|numeral|	twenty-four, fourth, 1991, 14:24
-PRT|particle|	at, on, out, over per, that, up, with
-PRON|pronoun|	he, their, her, its, my, I, us
-VERB|verb|	is, say, told, given, playing, would
-.|	punctuation marks|	. , ; !
-X|	other|	ersatz, esprit, dunno, gr8, univeristy
+|---
+ Tag|Meaning|English Examples
+ ---|--------|-----------
+ ADJ|adjective|	new, good, high, special, big, local
+ ADP|adposition|	on, of, at, with, by, into, under
+ ADV|adverb|	really, already, still, early, now
+ CONJ|conjunction|	and, or, but, if, while, although
+ DET|determiner, article|	the, a, some, most, every, no, which
+ NOUN|noun|	year, home, costs, time, Africa
+ NUM|numeral|	twenty-four, fourth, 1991, 14:24
+ PRT|particle|	at, on, out, over per, that, up, with
+ PRON|pronoun|	he, their, her, its, my, I, us
+ VERB|verb|	is, say, told, given, playing, would
+ .|	punctuation marks|	. , ; !
+ X|	other|	ersatz, esprit, dunno, gr8, univeristy
 
-So much better!
-Group them together (based on my own understanding :laughing:)
+The Stanford NLP version of POS tagging is more condensed which can lead to more representation. Now, we group them together as such:
 
 ```python
 #Lets make a dictionary
@@ -414,7 +420,7 @@ This is the golden fine point where I start to deal with the dataset separately 
 
 **Rationale:** There is a methodology of how I am going to perform the TFIDF here.
 
-First of all, a one-liner summary about TFIDF: It is a measure for scoring words that appear often in a single document, but very rarely in other documents. Its use can be attributed to, once again for our use case, detecting the words that someone of an MBTI type would use more often collectively as opposed to another.
+First of all, a one-liner summary about TFIDF: *It is a measure for scoring words that appear often in a single document, but very rarely in other documents.* Its use can be attributed to, once again for our use case, detecting the words that someone of an MBTI type would use more often collectively as opposed to another.
 
 For each run of the target variable (I'll start with Introversion/Extraversion), a train test split will be done using stratified sampling, especially important for E/I and S/N target variables. Since each row (or data point) identifies differently with each variable, the collection of rows belonging to X_train in E/I will definitely be different from the X_train of S/N. This is important because I will only use the X_train portion to train the TFIDF model, followed by having the model transform the X_test word data. This measure ensures that the word data in the test set has no role in the dataset training which also means avoiding overrepresentation or overfitting.
 
@@ -452,11 +458,9 @@ Oh yes, I should explain TSVD.
 
 TSVD, from my own limited understanding, is a reduction method much like Principal Component Analysis (PCA), except that it only 'shrinks' vertically. It is commonly used together with TFIDF since TSVD has the ability to 'merge' together word vectors that have similar scores in the dataset (in simple stats language, high positive correlation). Such modelling would tend to group together words that belong to similar topics, since they appear in large amounts in a small subset of documents.
 
-Ok I admit, I just plug and played :X
+So in my case, the end result would be 1500 truncated columns of various ngram range. This method also helps manage computer memory better.
 
-So in my case, the end result would be 1500 truncated columns of various ngram range. This method also helps manage computer memory :wink:
-
-Unfortunately for me I kinda 'lost' the words used in the process so...
+Unfortunately for this method, there is no way we can determine which exact words or phrases influence the results anymore.
 
 ### Feature removal
 
@@ -473,24 +477,18 @@ I did two types of scaling: Standard Scaling and MinMax Scaling.
 
 Standard Scaling works to 'level' the field across column features. Quite commonly in machine learning execution, we get imbalanced representation where one feature would have a range of 100000 while another probably only has a range of 0.001 (and therefore, the former would significantly affect the scoring function more). What Standard Scaling does is simply subtract each value from the mean and then divide by the standard deviation. Naturally, features with large ranges gets 'penalized' more heavily.
 
-I forgot to plot using my own data, so hopefully this imagery from a class project would help :sweat_smile:
+I forgot to plot using my own data, so hopefully this imagery from a class project would help:
 
 Before:
-![ss_before](ss_before.png)
+![ss_before](https://github.com/yix90/yix90.github.io/blob/master/images/ss_before.png)
 After:
-![ss_after](ss_after.png)
+![ss_after](https://github.com/yix90/yix90.github.io/blob/master/images/ss_after.png)
 
-I can't scale this pesky shit :angry:
-
-So...I only applied this on the other metadata that I ported over.
-
-MinMax Scaling was done primarily for the next feature selection technique that I used: Chi square. Chi square selection only works with positive values, so I kinda have to 'scale up' the negative values up. What this scaling essentially does is to scale the data to a specified range, namely between 1 and 0
-
-(On hindsight I probably didn't need the standard scaling but heck)
+MinMax Scaling was done primarily for purpose of the next feature selection technique that I used: Chi square. Chi square selection only works with positive values, so I have to 'scale up' the negative values up. What this scaling essentially does is to scale the data to a specified range, namely between 1 and 0
 
 ### Under-Sampling the majority class
 
-We still do have imbalanced datasets (for E/I and S/N) which necessitates the use of stratified sampling during the train test split. An imbalanced dataset is generally bad for machine learning as it will tend to predict more readily the majority class. One way to provide the balance is to either under-sample the majority class or to over-sample the minority class. I chose to do the former only. Somehow.
+We still do have imbalanced datasets (for E/I and S/N) which necessitates the use of stratified sampling during the train test split. An imbalanced dataset is generally bad for machine learning as it will tend to predict more readily the majority class. One way to provide the balance is to either under-sample the majority class or to over-sample the minority class. For this project I chose to do the former only.
 
 ```python
 if imbl:
@@ -500,22 +498,36 @@ if imbl:
 
 ### More Feature reduction!
 
-Use Chi square. Once again, I can't explain it :pensive: except that I reduced it further to 100 features.
+##### About Chi Square:
+A chi square test measures how related each distribution of data is to the respective categorical variable. So for example
+
+Very useful for binary classifiers, which is why I chose this method.
 
 Anyway! Here are the results in the case of Introversion/Extraversion, top ten!:
 
--|Features|	Scores|	p-value
--|-------|--------|-------
-37|	1_15|	5.958086|	0.014650
-33|	1_11|	5.582567|	0.018140
-3|	n_caps_char|	4.601679|	0.031941
-2|	n_caps|	3.875362|	0.049000
-30|	1_7|	3.746265|	0.052926
-38|	1_16|	3.508324|	0.061061
-28|	1_3|	3.445238|	0.063434
-31|	1_9|	3.156438|	0.075628
-32|	1_10|	2.853656|	0.091166
-27|	1_2|	2.413678|	0.120279
+ -|Features|	Scores|	p-value
+ -|-------|--------|-------
+ 37|	1_15|	5.958086|	0.014650
+ 33|	1_11|	5.582567|	0.018140
+ 3|	n_caps_char|	4.601679|	0.031941
+ 2|	n_caps|	3.875362|	0.049000
+ 30|	1_7|	3.746265|	0.052926
+ 38|	1_16|	3.508324|	0.061061
+ 28|	1_3|	3.445238|	0.063434
+ 31|	1_9|	3.156438|	0.075628
+ 32|	1_10|	2.853656|	0.091166
+ 27|	1_2|	2.413678|	0.120279
+
+Observations:
+- Most of the best predictors are single word features. *Interesting.*
+- The p-values shown actually suggests that a large majority of the features available are not exactly useful for differentiating between the target classes, with the p-value inching above 0.05 even within the top ten features (not to mention the other 90, or even the rejected ones!)
+
+Nevertheless, we still use them for modelling.
+
+For visualization, here is the distribution chart of feature 1_15. This suggest that there are a group of single words that extroverts use that introverts would use less of, according to the feature.
+
+![Distribution of 1_15](https://github.com/yix90/yix90.github.io/blob/master/images/1_15.png)
+
 
 ### At long last, modelling!
 
@@ -529,17 +541,17 @@ Score: 0.820749279539
 
 Cross val score: [ 0.8261563   0.80718954  0.81730769  0.82670906  0.80830671]
 
-type|precision|recall|f1-score|support
-----------|----------|------------|--------|----------
-Introvert| 0.93| 0.83| 0.88 |1335
-Extrovert|0.58|0.78|0.67 |400
-avg / total| 0.85| 0.82| 0.83 |1735
+ type|precision|recall|f1-score|support
+ ----------|----------|------------|--------|----------
+ Introvert| 0.93| 0.83| 0.88 |1335
+ Extrovert|0.58|0.78|0.67 |400
+ avg / total| 0.85| 0.82| 0.83 |1735
 
 
---|Introvert_pred|Extrovert_pred
---------|--------------|---------------    
-Introvert_true| 1113|  222
-Extrovert_true|  89| 311
+ --|Introvert_pred|Extrovert_pred
+ --------|--------------|---------------    
+ Introvert_true| 1113|  222
+ Extrovert_true|  89| 311
 
 Sorry I didn't really keep records of other models, but this works!
 
@@ -551,16 +563,16 @@ Score: 0.821902017291
 
 Cross val score: [ 0.83544304  0.82446809  0.83028721  0.83018868  0.83684211]
 
-type|precision|recall|f1-score|support
-----|----------|----------|--------|-----------
-Intuitive| 0.97| 0.82| 0.89|1496
-Sensing|  0.42| 0.82|  0.56|  239
-avg / total|  0.89| 0.82| 0.84|1735
+ type|precision|recall|f1-score|support
+ ----|----------|----------|--------|-----------
+ Intuitive| 0.97| 0.82| 0.89|1496
+ Sensing|  0.42| 0.82|  0.56|  239
+ avg / total|  0.89| 0.82| 0.84|1735
 
---| Intuitive_pred|  Sensing_pred
---|--------------|----------------
-Intuitive_true| 1231| 265
-Sensing_true| 44|195
+ --| Intuitive_pred|  Sensing_pred
+ --|--------------|----------------
+ Intuitive_true| 1231| 265
+ Sensing_true| 44|195
 
 __Thinking/Feeling__
 
@@ -568,16 +580,16 @@ Score: 0.841498559078
 
 Cross val score: [ 0.82605364  0.8696331   0.84748428  0.83333333  0.84507042]
 
-type|precision|    recall|  f1-score|   support
-----|----------|--------|---------|---------
-Feeling| 0.85|0.86|0.85|939
-Thinking|0.83|0.83|0.83|796
-avg / total|0.84|0.84|0.84|1735
+ type|precision|    recall|  f1-score|   support
+ ----|----------|--------|---------|---------
+ Feeling| 0.85|0.86|0.85|939
+ Thinking|0.83|0.83|0.83|796
+ avg / total|0.84|0.84|0.84|1735
 
---|Feeling_pred|  Thinking_pred
---|-------------|---------
-Feeling_true|803|136
-Thinking_true|139|657
+ --|Feeling_pred|  Thinking_pred
+ --|-------------|---------
+ Feeling_true|803|136
+ Thinking_true|139|657
 
 
 __Judging/Perceiving__
@@ -586,16 +598,16 @@ Score: 0.796541786744
 
 Cross val score: [ 0.79491833  0.79855465  0.79597438  0.78405931  0.79851439]
 
-type| precision|    recall|  f1-score|   support
-----|---------|---------|---------|-----------
-Perceiving|0.84|0.82|0.83|1048
-Judging|0.73|0.77|0.75|687
-avg / total|0.80|0.80|0.80|1735
+ type| precision|    recall|  f1-score|   support
+ ----|---------|---------|---------|-----------
+ Perceiving|0.84|0.82|0.83|1048
+ Judging|0.73|0.77|0.75|687
+ avg / total|0.80|0.80|0.80|1735
 
---| Perceiving_pred|  Judging_pred
---|---------------|-------------|
-Perceiving_true|856|192
-Judging_true|161|526
+ --| Perceiving_pred|  Judging_pred
+ --|---------------|-------------|
+ Perceiving_true|856|192
+ Judging_true|161|526
 
 
 ## The TPOT fallacy
@@ -635,14 +647,12 @@ Generation 10 - Current best internal CV score: 0.819767096337
 
 Best pipeline: LogisticRegression(FastICA(ZeroCount(MaxAbsScaler(input_matrix)), tol=0.1), C=20.0, dual=False, penalty=l1)
 ```
-
-OR SO I THOUGHT. AGAIN.
-
-Score: 0.665254237288 :expressionless:
+Despite the processing from TPOT, it seems that the result still falls of the scores attained from only Logistic Regression as performed earlier.
+Applying the TPOT model to our test data,
+Score: 0.665254237288
+Absolutely not fantastic.
 
 It happened similarly with other TPOT runs for other 3 MBTI types.
-
-Look at all the cheem modelling, and they still cannot beat the simple model!
 
 Important life lesson as a data scientist: Cheem and fancy isn't everything!
 
@@ -664,9 +674,11 @@ for line in mbti_textlist:
 more_magic(Someguy)
 ```
 
-Now that you made it to this point, I hope you have not forgotten about the webapp hahah.
+## Limitations
+TBC
 
-[Click here!](https://yix90.github.io)
+## Verdict
+TBC
 
 ## Future work
 
