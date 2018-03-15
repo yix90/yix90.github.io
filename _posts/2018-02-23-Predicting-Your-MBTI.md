@@ -12,7 +12,7 @@ MBTI, short for Myers-Briggs Type Indicator, is a personality metric developed b
 
 Each person is tested in 4 different areas:
 
-![mbtimodel](https://github.com/yix90/yix90.github.io/blob/master/images/mbtimodel.jpg)
+![mbtimodel](/images/mbtimodel.jpg)
 source: CPP Inc.
 
 Each person would be typed with 4 letters according to MBTI. So for example for someone whose type is ENFJ, this means that this person is extraverted, intuitive, feeling and judging. I hope this little write-up is succinct enough, but if it is not then please feel free to refer to the official [MBTI page](http://www.myersbriggs.org/my-mbti-personality-type/mbti-basics/home.htm?bhcp=1) to find out more.
@@ -81,7 +81,7 @@ If, at this point, you are already feeling afraid of what is to come, here is pr
   * Mentions (eg. @tamagonii)
   * Hashtags (eg. #ilovetamago)
   * MBTI reference (eg. INFP, ENFJ) (not used)
-  * Action words (eg. *jumps into the pool and swim away*)
+  * Action words (eg. \*jumps into the pool and swim away\*)
   * Enneagram regerence (eg. 4w1) (not used)
   * Brackets (eg. [quote])
   * Dots count (...)
@@ -130,7 +130,7 @@ As with any Machine Learning tasks, we must first define our target variable. Th
 
 Here is a breakdown on the number of people per MBTI type (in yellow) contained in the dataset, benchmarked against the global population percentage representation of each type mapped onto the graph (taken from [careerplanner.com](https://www.careerplanner.com/MB2/TypeInPopulation.cfm)):
 
-![mbti_comparison](https://github.com/yix90/yix90.github.io/blob/master/images/mbti_comparison.png)
+![mbti_comparison](/images/mbti_comparison.png)
 
 And here is the breakdown of the total number of people of each type in the dataset:
 
@@ -171,18 +171,18 @@ mbtitypes_all['is_J'] = mbtitypes_all['type'].apply(lambda x: 1 if x[3] == 'J' e
 mbtitypes_all.columns = ['type','is_E','is_S','is_T','is_J']
 mbtitypes_all.head()
 ```
-|---
-| type|is_E|is_S|is_T|is_J|
-| ----|----|----|----|----|
-| INFJ|0|0|0|1|
-| ENTP|1|0|1|0|
-| INTP|0|0|1|0|
-| INTJ|0|0|1|1|
-| ENTJ|1|0|1|1|
+
+ | type|is_E|is_S|is_T|is_J|
+ | ----|----|----|----|----|
+ | INFJ|0|0|0|1|
+ | ENTP|1|0|1|0|
+ | INTP|0|0|1|0|
+ | INTJ|0|0|1|1|
+ | ENTJ|1|0|1|1|
 
 Here we visualize the classifiers once again:
 
-![4_piechart](https://github.com/yix90/yix90.github.io/blob/master/images/4_piechart.png)
+![4_piechart](/images/4_piechart.png)
 
 This looks a lot better than the previous 16-class variable, though we still see imbalanced targets for E/I and S/N. We shall deal with them in due time.
 
@@ -192,7 +192,7 @@ Correlation - How close each feature is affected by another.
 
 For example, if the amount of sales drops/increases definitely with an increase in price, we can say that amount of sales and price are correlated. Whereas in the case where the number of shoppers does not increase/decrease significantly with the changes in pricing, we can say that they have little to no correlation.
 
-![4type_corr](https://github.com/yix90/yix90.github.io/blob/master/images/4type_corr.png)
+![4type_corr](/images/4type_corr.png)
 
 The correlation for all 4 types are very close to 0, which is a good sign.
 
@@ -223,7 +223,7 @@ Other data available includes word count, character count, number of fully capit
 
 Here's a cursory view of the dataframe after the processing:
 
-![df_meta](https://github.com/yix90/yix90.github.io/blob/master/images/df_meta.png)
+![df_meta](/images/df_meta.png)
 
 ### Parts of Speech (POS) tagging
 
@@ -361,7 +361,7 @@ For interests sake, here is the full list of tags used by nltk, minus the punctu
  PDT| Predeterminer
  POS| Possessive ending
  PRP| Personal pronoun
- PRP\$| Possessive pronoun
+ PRP$| Possessive pronoun
  RB| Adverb
  RBR| Adverb, comparative
  RBS| Adverb, superlative
@@ -377,7 +377,7 @@ For interests sake, here is the full list of tags used by nltk, minus the punctu
  VBZ| Verb, 3rd person singular present
  WDT| Wh­determiner
  WP| Wh­pronoun
- WP\$| Possessive wh­pronoun
+ WP$| Possessive wh­pronoun
  WRB| Wh­adverb
 
 
@@ -385,7 +385,6 @@ We can already notice that there are multiple tags for each word type, each havi
 
 Now compare that with POS tags by Stanford NLP:
 
-|---
  Tag|Meaning|English Examples
  ---|--------|-----------
  ADJ|adjective|	new, good, high, special, big, local
@@ -480,9 +479,9 @@ Standard Scaling works to 'level' the field across column features. Quite common
 I forgot to plot using my own data, so hopefully this imagery from a class project would help:
 
 Before:
-![ss_before](https://github.com/yix90/yix90.github.io/blob/master/images/ss_before.png)
+![ss_before](/images/ss_before.png =100x)
 After:
-![ss_after](https://github.com/yix90/yix90.github.io/blob/master/images/ss_after.png)
+![ss_after](/images/ss_after.png)
 
 MinMax Scaling was done primarily for purpose of the next feature selection technique that I used: Chi square. Chi square selection only works with positive values, so I have to 'scale up' the negative values up. What this scaling essentially does is to scale the data to a specified range, namely between 1 and 0
 
@@ -526,7 +525,7 @@ Nevertheless, we still use them for modelling.
 
 For visualization, here is the distribution chart of feature 1_15. This suggest that there are a group of single words that extroverts use that introverts would use less of, according to the feature.
 
-![Distribution of 1_15](https://github.com/yix90/yix90.github.io/blob/master/images/1_15.png)
+![Distribution of 1_15](/images/1_15.png)
 
 
 ### At long last, modelling!
