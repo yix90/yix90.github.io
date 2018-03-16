@@ -1,10 +1,8 @@
 ---
 layout: post
-title: "Predicting Your MBTI"
+title: "Predicting your MBTI type using text data"
 date: 2018-02-23
 ---
-
-# Predicting your MBTI type using text data
 
 ## A brief introduction
 
@@ -338,10 +336,7 @@ I still want to use the median as a determinant. How can I do so? Combine the ta
 
 For interests sake, here is the full list of tags used by nltk, minus the punctuation tags:
 
-```
-#For reference ;)
-```
- Tag|Description
+ Tag | Description
  ---|------------
  CC| Coordinating conjunction
  CD| Cardinal number
@@ -479,7 +474,7 @@ Standard Scaling works to 'level' the field across column features. Quite common
 I forgot to plot using my own data, so hopefully this imagery from a class project would help:
 
 Before:
-![ss_before](/images/ss_before.png =100x)
+![ss_before](/images/ss_before.png){ width=50% }
 After:
 ![ss_after](/images/ss_after.png)
 
@@ -504,8 +499,8 @@ Very useful for binary classifiers, which is why I chose this method.
 
 Anyway! Here are the results in the case of Introversion/Extraversion, top ten!:
 
- -|Features|	Scores|	p-value
- -|-------|--------|-------
+ --|Features|	Scores|	p-value
+ --|-------|--------|-------
  37|	1_15|	5.958086|	0.014650
  33|	1_11|	5.582567|	0.018140
  3|	n_caps_char|	4.601679|	0.031941
@@ -653,7 +648,7 @@ Absolutely not fantastic.
 
 It happened similarly with other TPOT runs for other 3 MBTI types.
 
-Important life lesson as a data scientist: Cheem and fancy isn't everything!
+Important life lesson as a data scientist: Do not put your faith into automated things too much, each problem has their own unique solution which can sometimes be simply within the ordinary. Unless you are pressed for time.
 
 ## Whats next
 
@@ -673,23 +668,33 @@ for line in mbti_textlist:
 more_magic(Someguy)
 ```
 
+This is the portion that will activate the interactivity portion in my webapp plus Telegram app (or any other applications I can think of using). Fun times ahead, friends!
+
 ## Limitations
-TBC
+Of course I must address this. As difficult as this process is, a data scientist must know how to criticize their data.
+
+1. Text data exists in so many forms (SMS/Instant messaging, Facebook/Instagram/Forum posts, Twitter tweets, blog entries, articles etc). They each carry their own writing styles, from casual & multiple short messages to huge chunks of formal writing. As mentioned, the dataset is from forum posts which is only one type of writing style. The model would be able to predict a person's MBTI type more accurately using the person's forum writing as opposed to the person's short messages or long articles, for example.
+
+2. Nothing is known with regards to other personal biodata of each MBTI type person (i.e. each data point). We operate under the naive assumption that the level of english, writing styles etc. is the same across all users, regardless of nationality, english as 1st/2nd language, education level and so on. Biodata can help make the model more accurate by potentially introducing significant factors that would translate into improving the variance.
+
+3. On top of the dataset being extracted from a forum, the forum itself is specialized towards discussion of personality types. On the other hand, real life conversations can go pretty much anywhere. By training the data from within the scope of the forum posts, it is possible for __overfitting__ to occur for the model. The way to mitigate such a thing happening is to introduce text data from multiple sources of different genres, but it would be generally difficult to obtain MBTI-labeled data from sources generally outside of the MBTI topic. Another possible way would be for users (of our applications etc) to 'help' train the data by providing their own text input plus their own correct MBTI, but this method then would require us then to place full trust on the integrity of the users.
+
+4. Speaking about trust and integrity, this is also the kind of trust that we place in the users recorded in the dataset itself. In actual fact when we go through the questioning test itself, we fall prey to our own biasness or the ambiguity of the questions itself, leading to inaccurate predictions. For purpose of this data project, we must assume that each person's type is predicted correctly for the majority, large enough to mitigate the inaccuracy by the wrong minority.
+
+5. In a real world scenario, we fall under the spectrum across the two ends of each MBTI pair, instead of an explicit one. So in a sense, if a person is only say 51% extraverted, he/she is already classified as an extrovert. Again, we must assume a normal distribution of people belonging to each type, in order for the model to hold true.
+
+In essence, one should ideally be aware of the limitations that apply when doing their own prediction. This project should by no means serve as a replacement for professional assessment of one's MBTI type.
 
 ## Verdict
-TBC
+This project presents an alternative to the traditional method of finding out a person's MBTI type. To expand on its use, one can also use this tool to find out another person's MBTI type through the use of text correspondences of the other party. With sufficient data, HR recruiters who already utilizes MBTI typing for their candidate screening can build upon this model to hasten the recruiting process, improving on the overall experience.
+
+With the advent of data collection methods and techniques, who knows to say if this method of using text data could be used to augment other possible methods of typing. While there exists definite methods of determining a person's type (as the traditional questioning proves), for the progress of society we would like to explore new tools and methodologies that can ease the way we do things. For example, incorporation of handwriting styles to map personality traits (this can be a project in itself!) on top of the content of the writing, observing speech patterns etc..!
+
+And of course, finding out one's own MBTI type is always a fun process. This is one of the main reasons that I undertook this project, and also why I am hoping to develop an application for the public's use and enjoyment.
 
 ## Future work
+On top of predicting a person's MBTI type, I hope to expand the project further by introducing Enneagram typing (Another personality typology). Unlike this MBTI project however, the Enneagram has 9 types and cannot be considered individually.
 
-I have to admit, I am abit lucky in a sense that the modeling turned out not too badly. There is still much to be done, both for this project and my own data science journey:
+Following which, I can also do a comparison to see how each MBTI type corresponds with each Enneaagram type.
 
-* Be able to understand the models that I have utilized so far
-* Perform some more feature extraction from images and webpages, followed by topic modelling (I haven't forgotten!)
-* Try other feature reduction techniques
-* Try using other predicting models
-* Try my hand at deep learning
-
-On top of doing the above, I also hope to explore the following:
-
-* Perform an Enneagram classifier
-* Combine the MBTI and Enneagram classifier models and see how each MBTI type relates to each Enneagram type.
+That is all, my friends.

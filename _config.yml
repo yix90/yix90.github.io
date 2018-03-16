@@ -1,5 +1,6 @@
 theme: jekyll-theme-cayman
-name: The Tamago Data Science Blog
+title: The Tamago Data Science Blog
+description: A blog detailing Yixuan's data science adventures
 markdown: kramdown
 permalink: /blog/:year/:month/:day/:title
 google_analytics: UA-115542586-1
