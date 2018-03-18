@@ -15,7 +15,7 @@ source: CPP Inc.
 
 Each person would be typed with 4 letters according to MBTI. So for example for someone whose type is ENFJ, this means that this person is extraverted, intuitive, feeling and judging. I hope this little write-up is succinct enough, but if it is not then please feel free to refer to the official [MBTI page](http://www.myersbriggs.org/my-mbti-personality-type/mbti-basics/home.htm?bhcp=1) to find out more.
 
-The most common way of finding out of our type is to visit free personality test websites, where they would require you to answer questions after questions after questions (or statements) in order to determine your type, as accurately as possible. More often than not, these questions relate directly to the type characteristic which requires you to rate how well you 'relate' to the question asked. For example:
+The most common way of finding out our type is to visit free personality test websites, where they would require you to answer questions after questions after questions (or statements) in order to determine your type, as accurately as possible. More often than not, these questions relate directly to the type characteristic which requires you to rate how well you 'relate' to the question asked. For example:
 
 > 25. My idea of relaxation involves reading a book by the beach
 >
@@ -650,7 +650,7 @@ It happened similarly with other TPOT runs for other 3 MBTI types.
 
 Important life lesson as a data scientist: Do not put your faith into automated things too much, each problem has their own unique solution which can sometimes be simply within the ordinary. Unless you are pressed for time.
 
-## Whats next
+## What's next
 
 I wrote another class that would train incoming inputs for use in training (for application!)
 
@@ -688,13 +688,13 @@ In essence, one should ideally be aware of the limitations that apply when doing
 ## Verdict
 This project presents an alternative to the traditional method of finding out a person's MBTI type. To expand on its use, one can also use this tool to find out another person's MBTI type through the use of text correspondences of the other party. With sufficient data, HR recruiters who already utilizes MBTI typing for their candidate screening can build upon this model to hasten the recruiting process, improving on the overall experience.
 
-With the advent of data collection methods and techniques, who knows to say if this method of using text data could be used to augment other possible methods of typing. While there exists definite methods of determining a person's type (as the traditional questioning proves), for the progress of society we would like to explore new tools and methodologies that can ease the way we do things. For example, incorporation of handwriting styles to map personality traits (this can be a project in itself!) on top of the content of the writing, observing speech patterns etc..!
+With the advent of data collection methods and techniques, who knows to say if this method of using text data could be used to augment other possible methods of typing. While there exists definite methods of determining a person's type (as the traditional questioning proves), for the progress of society we would like to explore new tools and methodologies that can ease the way we do things. For example, incorporation of handwriting styles to map personality traits (this can be a project in itself!) on top of the content of the writing, observing speech patterns etc..! The possibilities are endless, yet at the same time, scary...
 
 And of course, finding out one's own MBTI type is always a fun process. This is one of the main reasons that I undertook this project, and also why I am hoping to develop an application for the public's use and enjoyment.
 
 ## Future work
 On top of predicting a person's MBTI type, I hope to expand the project further by introducing Enneagram typing (Another personality typology). Unlike this MBTI project however, the Enneagram has 9 types and cannot be considered individually.
 
-Following which, I can also do a comparison to see how each MBTI type corresponds with each Enneaagram type.
+Following which, I can also do a comparison to see how each MBTI type corresponds with each Enneagram type.
 
-That is all, my friends.
+That is all for now, my friends.
