@@ -474,8 +474,11 @@ Standard Scaling works to 'level' the field across column features. Quite common
 I forgot to plot using my own data, so hopefully this imagery from a class project would help:
 
 Before:
+
 ![ss_before](/images/ss_before_copy.png)
+
 After:
+
 ![ss_after](/images/ss_after.png)
 
 MinMax Scaling was done primarily for purpose of the next feature selection technique that I used: Chi square. Chi square selection only works with positive values, so I have to 'scale up' the negative values up. What this scaling essentially does is to scale the data to a specified range, namely between 1 and 0.
